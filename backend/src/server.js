@@ -21,14 +21,13 @@ console.log(__dirname, "directory");
 connectDB();
 // middleware
 
-if(process.env.NODE_ENV !="production")
-{
+
     app.use(
     cors({
         origin: "http://localhost:5173",
     })
 )
-}
+
 
 
 app.use(express.json());
