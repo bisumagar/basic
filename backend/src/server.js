@@ -1,7 +1,12 @@
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { connectDB } from "./config/db.js";
-import notRouter from "./routes/noteRoutes.js";
+import rateLimiter from "./middleware/ratelimiter.js";
+import noteRouter from "./routes/noteRoutes.js";
+
+
+
 
 
 
@@ -12,9 +17,19 @@ const PORT = process.env.PORT || 5001;
 
 connectDB();
 // middleware
-app.use(express.json());
-app.use("/api/notes", notRouter);
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+    })
+)
 
+app.use(express.json());
+app.use(rateLimiter)
+// app.use((req,res,next)=>{
+//     console.log(`req method is ${req.method} and url is ${req.url}`);
+//     next();
+// });
+app.use("/api/notes",noteRouter );
 app.listen(PORT, () => {
     console.log("server started on PORT:",PORT);
 });
